@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import tws.dto.EmployeeDto;
 import tws.entity.Employee;
 import tws.repository.EmployeeMapper;
+import tws.service.EmployeeService;
 
 import java.net.URI;
 import java.util.List;
@@ -22,36 +26,41 @@ import java.util.UUID;
 public class EmployeeController {
 
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeService employeeService;
+    
+    
+    @GetMapping("/EmployeeDto/{id}")
+    public ResponseEntity<EmployeeDto> getEmployeeWithDesc(@PathVariable String id) {
+        
+    	return ResponseEntity.ok(employeeService.getEmployeeWithDesc(id));
+    }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getAll() {
-        return ResponseEntity.ok(employeeMapper.selectAll());
+    public ResponseEntity<List<Employee>> getAll
+        (@RequestParam(required = false) int page,
+         @RequestParam(required = false) int pageSize) {
+    
+        return ResponseEntity.ok(employeeService.selectAll());
     }
     @GetMapping("/{id}")
     public ResponseEntity<Employee> selectById(@PathVariable String id) {
-        Employee employee = new Employee();
-        employee = employeeMapper.selectById(id);
-    	return ResponseEntity.ok(employee);
+    	return ResponseEntity.ok(employeeService.selectById(id));
     }
     
     @PostMapping
     public ResponseEntity<Employee> insert(@RequestBody Employee employee){
-    	String id = UUID.randomUUID().toString();
-    	employee.setId(id);
-    	employeeMapper.insert(employee);
-    	return ResponseEntity.created(URI.create("/employees"+id)).build();
-    	
+    	Employee employeeRes = employeeService.insert(employee);
+    	return ResponseEntity.created(URI.create("/employees"+employeeRes.getId())).build();  	
     }
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateById(@PathVariable String id,@RequestBody Employee employee) {
-        employeeMapper.updateById(id,employee);
-    	return ResponseEntity.ok(employee);
+    	Employee employeeRes = employeeService.updateById(id,employee);
+    	return ResponseEntity.ok(employeeRes);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> updateById(@PathVariable String id) {
-    	employeeMapper.deleteById(id);
-    	return ResponseEntity.ok().build();
+    public ResponseEntity<Employee> updateById(@PathVariable String id) {
+    	Employee employeeRes = employeeService.deleteById(id);
+    	return ResponseEntity.ok(employeeRes);
     }
     
 

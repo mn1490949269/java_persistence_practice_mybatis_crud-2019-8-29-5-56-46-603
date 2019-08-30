@@ -11,13 +11,13 @@ import java.util.List;
 @Mapper
 public interface EmployeeMapper {
     List<Employee> selectAll();
-
+    List<Employee> select(@Param("keyword") String keyword);
 	void insert(@Param("employee") Employee employee);
 
 	Employee selectById(@Param("id") String id);
 
-	Employee updateById(@Param("id") String id, @Param("employee") Employee employee);
+	int updateById(@Param("id") String id, @Param("employee") Employee employee);
 
-	Employee deleteById(@Param("id") String id);
+	int deleteById(@Param("id") String id);
 	EmployeeDto  getEmployeeWithDesc(@Param("id") String id);
 }

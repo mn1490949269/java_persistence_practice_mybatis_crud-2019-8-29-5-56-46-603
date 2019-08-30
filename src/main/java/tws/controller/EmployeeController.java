@@ -1,5 +1,6 @@
 package tws.controller;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,12 +37,18 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getAll
+    public ResponseEntity<List<Employee>> selectAll
         (@RequestParam(required = false) int page,
          @RequestParam(required = false) int pageSize) {
     
         return ResponseEntity.ok(employeeService.selectAll());
     }
+    @GetMapping("/{keyword}")
+    public ResponseEntity<List<Employee>> select(@PathVariable String keyword) {
+    
+        return ResponseEntity.ok(employeeService.select(keyword));
+    }
+    
     @GetMapping("/{id}")
     public ResponseEntity<Employee> selectById(@PathVariable String id) {
     	return ResponseEntity.ok(employeeService.selectById(id));
@@ -53,14 +60,14 @@ public class EmployeeController {
     	return ResponseEntity.created(URI.create("/employees"+employeeRes.getId())).build();  	
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateById(@PathVariable String id,@RequestBody Employee employee) {
-    	Employee employeeRes = employeeService.updateById(id,employee);
-    	return ResponseEntity.ok(employeeRes);
+    public ResponseEntity<Integer> updateById(@PathVariable String id,@RequestBody Employee employee) {
+    	int res =  employeeService.updateById(id,employee);
+    	return ResponseEntity.ok(res);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Employee> updateById(@PathVariable String id) {
-    	Employee employeeRes = employeeService.deleteById(id);
-    	return ResponseEntity.ok(employeeRes);
+    public ResponseEntity<Integer> updateById(@PathVariable String id) {
+    	int res =  employeeService.deleteById(id);
+    	return ResponseEntity.ok(res);
     }
     
 

@@ -14,6 +14,7 @@ import tws.repository.EmployeeMapper;
 public class EmployeeService {
 	@Autowired
 	private EmployeeMapper employeeMapper;
+	
 	/*
 	 * desc
 	 */
@@ -26,6 +27,14 @@ public class EmployeeService {
 	 */
 	public List<Employee> selectAll(){
 		List<Employee> EmployeeList = employeeMapper.selectAll();
+		return EmployeeList;
+	}
+	
+	/*
+	 * 模糊查询
+	 */
+	public List<Employee> select(String keyword){
+		List<Employee> EmployeeList = employeeMapper.select(keyword);
 		return EmployeeList;
 	}
 	
@@ -50,17 +59,17 @@ public class EmployeeService {
 	/*
 	 * 更新
 	 */
-	public Employee updateById(String id,Employee employee) {
-		Employee employeeRes = employeeMapper.updateById(id,employee);	
-        return employeeRes;
+	public int updateById(String id,Employee employee) {
+		int result =  employeeMapper.updateById(id,employee);	
+        return result;
 	}
 	
 	/*
 	 * 删除
 	 */
-	public Employee deleteById(String id) {
-		Employee employeeRes = employeeMapper.deleteById(id);	
-        return employeeRes;
+	public int deleteById(String id) {
+		int result = employeeMapper.deleteById(id);	
+        return result;
 	}
 	
 	
